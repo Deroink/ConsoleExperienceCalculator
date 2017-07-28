@@ -12,3 +12,7 @@ Using this list, it will allow data manipulation in various ways, whether it is 
 After any forms of data manipulation happen, the text file will save as both a new input file and output file (mainly to create an easy-to-read copy for others), so the data will be retained even if the application is closed.
 
 Once again, this is serving as practice for C#, so updates to code may come for the purposes of simply rewriting some lines of code, reasons which may include using better coding practices, more efficient algorithms, etc.
+
+
+EDIT 7/28/17:
+  Upon being satisfied with the work I've done for this project, I will likely rewrite this as a winform app, in order to practice GUI-based application experience. I may come back to update it at another point with changes based on what I have learned, since this is likely still a while away.
