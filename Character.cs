@@ -8,7 +8,7 @@ namespace ConsoleExperienceCalculator
 {
     class Character
     {
-        string firstName { get; set; }
+        string FirstName { get; set; }
         string lastName { get; set; }
         int currentLevel { get; set; }
         int battleCount { get; set; }
@@ -24,7 +24,7 @@ namespace ConsoleExperienceCalculator
         //parameterized constructor
         public Character(string thisFirstName, string thisLastName, int thisLevel, int thisBattle, int thisVictory, double thisEXP)
         {
-            firstName = thisFirstName;
+            FirstName = thisFirstName;
             lastName = thisLastName;
             currentLevel = thisLevel;
             battleCount = thisBattle;
@@ -34,8 +34,8 @@ namespace ConsoleExperienceCalculator
 
         public void Display()
         {
-            Console.WriteLine("    {0,-8}{1,11}    {2,9}    {3,6}    {4,6}    {5,10}", 
-                firstName, lastName, currentLevel.ToString(), battleCount.ToString(), victoryCount.ToString(), currentBattleEXP.ToString());
+            Console.WriteLine("    {0,-8}{1,11}    {2,9}    {3,6}    {4,6}         {5,10}", 
+                FirstName, lastName, currentLevel.ToString(), battleCount.ToString(), victoryCount.ToString(), currentBattleEXP.ToString());
         }
 
         public void addExperience()
@@ -44,7 +44,7 @@ namespace ConsoleExperienceCalculator
             {
                 try
                 {
-                    Console.WriteLine($"\n\nAdding experience points to the shown character:\n\n\t {firstName} {lastName}\n");
+                    Console.WriteLine($"\n\nAdding experience points to the shown character:\n\n\t {FirstName} {lastName}\n");
                     Console.WriteLine("What action did they do for EXP gain?\n---------------------------\n" +
                         "    0.) Go Back\n    1.) Attacked Enemy\n    2.) Other Action");
                     int menuResponse = Convert.ToInt32(Console.ReadLine());
@@ -71,7 +71,7 @@ namespace ConsoleExperienceCalculator
                                     case 2:
                                         hitEnemy = false;
                                         battleCount++;
-                                        Console.WriteLine($"    {firstName} gained no experience.\n    Still at {currentBattleEXP} EXP." +
+                                        Console.WriteLine($"    {FirstName} gained no experience.\n    Still at {currentBattleEXP} EXP." +
                                         $"\n    Battle count is now {battleCount}.\n    Victory count is at {victoryCount}." +
                                         $"\n\nPress any key to move on.");
                                         Console.ReadKey();
@@ -107,7 +107,6 @@ namespace ConsoleExperienceCalculator
                                             if(levelDifference >= 0)
                                             {
                                                 experienceGained = (30 + (Math.Pow(levelDifference, 1.575)));
-                                                victoryCount++;
                                             }
                                             else
                                             {
@@ -126,9 +125,10 @@ namespace ConsoleExperienceCalculator
                                                 experienceGained = 100;
                                             }
 
+                                            victoryCount++;
                                             currentBattleEXP += experienceGained;
 
-                                            Console.WriteLine($"    {firstName} gained {experienceGained} experience point(s)!" +
+                                            Console.WriteLine($"    {FirstName} gained {experienceGained} experience point(s)!" +
                                                 $"\n    Now at {currentBattleEXP} EXP." +
                                                 $"\n    Battle count is now {battleCount}." +
                                                 $"\n    Victory count is at {victoryCount}." +
@@ -176,7 +176,7 @@ namespace ConsoleExperienceCalculator
 
                                             currentBattleEXP += experienceGained;
 
-                                            Console.WriteLine($"    {firstName} gained {experienceGained} experience point(s)!" +
+                                            Console.WriteLine($"    {FirstName} gained {experienceGained} experience point(s)!" +
                                                 $"\n    Now at {currentBattleEXP} EXP." +
                                                 $"\n    Battle count is now {battleCount}." +
                                                 $"\n    Victory count is at {victoryCount}." +
@@ -198,13 +198,13 @@ namespace ConsoleExperienceCalculator
                             }
                             break;
                         case 2:
-                            Console.WriteLine($"How much EXP did {firstName} gain from this action?\nEnter a number:");
+                            Console.WriteLine($"How much EXP did {FirstName} gain from this action?\nEnter a number:");
                             try
                             {
                                 double experienceGained = Convert.ToDouble(Console.ReadLine());
                                 currentBattleEXP += experienceGained;
 
-                                Console.WriteLine($"{firstName} gained {experienceGained} experience points!" +
+                                Console.WriteLine($"{FirstName} gained {experienceGained} experience points!" +
                                     $"\nNow at {currentBattleEXP} EXP." +
                                     $"\nBattle count is at {battleCount}." +
                                     $"\nVictory count is at {victoryCount}" +
@@ -243,7 +243,7 @@ namespace ConsoleExperienceCalculator
             string newFirstName;
             string newLastName;
 
-            Console.WriteLine($"Looking to change values for the character:\n\t{firstName} {lastName}\n");
+            Console.WriteLine($"Looking to change values for the character:\n\t{FirstName} {lastName}\n");
             Console.WriteLine("    0.) Go Back\n    1.) Experience\n    2.) Level\n    3.) Battle Count\n    4.) Victory Count\n    5.) Name\n" +
                 "Change what? (enter #)");
 
@@ -254,7 +254,7 @@ namespace ConsoleExperienceCalculator
                     case 0:
                         break;
                     case 1:
-                        Console.WriteLine($"What is the new experience amount for {firstName}? \n(Type a number, or any negative number to cancel)" +
+                        Console.WriteLine($"What is the new experience amount for {FirstName}? \n(Type a number, or any negative number to cancel)" +
                             $"\n\tPlease note that decimal numbers are supported.");
                         if((Double.TryParse(Console.ReadLine(), out newEXP)))
                         {
@@ -266,7 +266,7 @@ namespace ConsoleExperienceCalculator
                             }
                             else
                             {
-                                Console.WriteLine($"Changing the EXP for {firstName} from {currentBattleEXP} EXP to {newEXP} EXP." +
+                                Console.WriteLine($"Changing the EXP for {FirstName} from {currentBattleEXP} EXP to {newEXP} EXP." +
                                     $"\nType 'y' to confirm these changes.");
 
                                 string confirmChanges = Console.ReadLine();
@@ -274,7 +274,7 @@ namespace ConsoleExperienceCalculator
                                 if(confirmChanges.Equals("y") || confirmChanges.Equals("Y"))
                                 {
                                     currentBattleEXP = newEXP;
-                                    Console.WriteLine($"{firstName} now has an EXP amount of {currentBattleEXP}.\nPress any key to move on.");
+                                    Console.WriteLine($"{FirstName} now has an EXP amount of {currentBattleEXP}.\nPress any key to move on.");
                                     Console.ReadKey();
                                 }
                                 else
@@ -291,7 +291,7 @@ namespace ConsoleExperienceCalculator
                         }
                         break;
                     case 2:
-                        Console.WriteLine($"What is the new level for {firstName}? \n(Type a whole number, or any negative number to cancel)");
+                        Console.WriteLine($"What is the new level for {FirstName}? \n(Type a whole number, or any negative number to cancel)");
                         if(Int32.TryParse(Console.ReadLine(), out newLevel))
                         {
                             if(newLevel <= -1)
@@ -302,7 +302,7 @@ namespace ConsoleExperienceCalculator
                             }
                             else
                             {
-                                Console.WriteLine($"Changing the level for {firstName} from {currentLevel} to {newLevel}." +
+                                Console.WriteLine($"Changing the level for {FirstName} from {currentLevel} to {newLevel}." +
                                     $"\nType 'y' to confirm these changes.");
 
                                 string confirmChanges = Console.ReadLine();
@@ -310,7 +310,7 @@ namespace ConsoleExperienceCalculator
                                 if (confirmChanges.Equals("y") || confirmChanges.Equals("Y"))
                                 {
                                     currentLevel = newLevel;
-                                    Console.WriteLine($"{firstName} is now level {currentLevel}.\nPress any key to move on.");
+                                    Console.WriteLine($"{FirstName} is now level {currentLevel}.\nPress any key to move on.");
                                     Console.ReadKey();
                                 }
                                 else
@@ -326,7 +326,7 @@ namespace ConsoleExperienceCalculator
                         }
                         break;
                     case 3:
-                        Console.WriteLine($"What is the new battle count for {firstName}? \n(Type a whole number, or any negative number to cancel)");
+                        Console.WriteLine($"What is the new battle count for {FirstName}? \n(Type a whole number, or any negative number to cancel)");
                         if (Int32.TryParse(Console.ReadLine(), out newBattleCount))
                         {
                             if (newBattleCount <= -1)
@@ -337,7 +337,7 @@ namespace ConsoleExperienceCalculator
                             }
                             else
                             {
-                                Console.WriteLine($"Changing the battle count for {firstName} from {battleCount} to {newBattleCount}." +
+                                Console.WriteLine($"Changing the battle count for {FirstName} from {battleCount} to {newBattleCount}." +
                                     $"\nType 'y' to confirm these changes.");
 
                                 string confirmChanges = Console.ReadLine();
@@ -345,7 +345,7 @@ namespace ConsoleExperienceCalculator
                                 if (confirmChanges.Equals("y") || confirmChanges.Equals("Y"))
                                 {
                                     battleCount = newBattleCount;
-                                    Console.WriteLine($"{firstName} now has a battle count of {battleCount}.\nPress any key to move on.");
+                                    Console.WriteLine($"{FirstName} now has a battle count of {battleCount}.\nPress any key to move on.");
                                     Console.ReadKey();
                                 }
                                 else
@@ -361,7 +361,7 @@ namespace ConsoleExperienceCalculator
                         }
                         break;
                     case 4:
-                        Console.WriteLine($"What is the new battle count for {firstName}? \n(Type a whole number, or any negative number to cancel)");
+                        Console.WriteLine($"What is the new battle count for {FirstName}? \n(Type a whole number, or any negative number to cancel)");
                         if (Int32.TryParse(Console.ReadLine(), out newVictoryCount))
                         {
                             if (newVictoryCount <= -1)
@@ -372,7 +372,7 @@ namespace ConsoleExperienceCalculator
                             }
                             else
                             {
-                                Console.WriteLine($"Changing the battle count for {firstName} from {victoryCount} to {newVictoryCount}." +
+                                Console.WriteLine($"Changing the battle count for {FirstName} from {victoryCount} to {newVictoryCount}." +
                                     $"\nType 'y' to confirm these changes.");
 
                                 string confirmChanges = Console.ReadLine();
@@ -380,7 +380,7 @@ namespace ConsoleExperienceCalculator
                                 if (confirmChanges.Equals("y") || confirmChanges.Equals("Y"))
                                 {
                                     victoryCount = newVictoryCount;
-                                    Console.WriteLine($"{firstName} now has a victory count of {victoryCount}.\nPress any key to move on.");
+                                    Console.WriteLine($"{FirstName} now has a victory count of {victoryCount}.\nPress any key to move on.");
                                     Console.ReadKey();
                                 }
                                 else
@@ -407,7 +407,7 @@ namespace ConsoleExperienceCalculator
                                 case 0:
                                     break;
                                 case 1:
-                                    Console.WriteLine($"What is the new first name for {firstName}?\n(Enter a word, or type 0 to cancel.");
+                                    Console.WriteLine($"What is the new first name for {FirstName}?\n(Enter a word, or type 0 to cancel.)");
                                     newFirstName = Console.ReadLine();
                                     if(newFirstName.Equals("0"))
                                     {
@@ -417,13 +417,13 @@ namespace ConsoleExperienceCalculator
                                     }
                                     else
                                     {
-                                        Console.WriteLine($"Changing {firstName} to {newFirstName}. \nEnter 'y' to confirm these changes.");
+                                        Console.WriteLine($"Changing {FirstName} to {newFirstName}. \nEnter 'y' to confirm these changes.");
                                         string confirmChanges = Console.ReadLine();
 
                                         if (confirmChanges.Equals("y") || confirmChanges.Equals("Y"))
                                         {
-                                            firstName = newFirstName;
-                                            Console.WriteLine($"This character's first name is now {firstName}.\nPress any key to move on.");
+                                            FirstName = newFirstName;
+                                            Console.WriteLine($"This character's first name is now {FirstName}.\nPress any key to move on.");
                                             Console.ReadKey();
                                         }
                                         else
@@ -434,7 +434,7 @@ namespace ConsoleExperienceCalculator
                                     }
                                     break;
                                 case 2:
-                                    Console.WriteLine($"What is the new last name for {firstName}?\n(Enter a word, or type 0 to cancel.");
+                                    Console.WriteLine($"What is the new last name for {FirstName}?\n(Enter a word, or type 0 to cancel.)");
                                     newLastName = Console.ReadLine();
                                     if (newLastName.Equals("0"))
                                     {
@@ -461,7 +461,7 @@ namespace ConsoleExperienceCalculator
                                     }
                                     break;
                                 case 3:
-                                    Console.WriteLine("New first name? Alternatively, type 0 to cancel");
+                                    Console.WriteLine("New first name? \n(Alternatively, type 0 to cancel)");
                                     newFirstName = Console.ReadLine();
                                     
                                     if(newFirstName.Equals("0"))
@@ -475,14 +475,14 @@ namespace ConsoleExperienceCalculator
                                         Console.WriteLine("New last name?");
                                         newLastName = Console.ReadLine();
 
-                                        Console.WriteLine($"Changing {firstName} {lastName} to {newFirstName} {newLastName}.\nType 'y' to confirm these changes.");
+                                        Console.WriteLine($"Changing {FirstName} {lastName} to {newFirstName} {newLastName}.\nType 'y' to confirm these changes.");
                                         string confirmChanges = Console.ReadLine();
 
                                         if (confirmChanges.Equals("y") || confirmChanges.Equals("Y"))
                                         {
-                                            firstName = newFirstName;
+                                            FirstName = newFirstName;
                                             lastName = newLastName;
-                                            Console.WriteLine($"This character's name is now {firstName} {lastName}.\nPress any key to move on.");
+                                            Console.WriteLine($"This character's name is now {FirstName} {lastName}.\nPress any key to move on.");
                                             Console.ReadKey();
                                         }
                                         else
@@ -515,11 +515,18 @@ namespace ConsoleExperienceCalculator
             }
         }
 
+        public void resetValues()
+        {
+            battleCount = 0;
+            victoryCount = 0;
+            currentBattleEXP = 0;
+        }
+
 
 
         public string getFullName()
         {
-            string fullName = firstName + " " + lastName;
+            string fullName = FirstName + " " + lastName;
             return fullName;
         }
 
