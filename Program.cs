@@ -11,89 +11,96 @@ namespace ConsoleExperienceCalculator
     {
         static void Main(string[] args)
         {
-            //The following try-catch block pertains to the CharacterData.txt file, in order to throw in error if it is not found in the specified path.
-            try
-            {
-                //Begin declaring and finding the text file here. Change the path if necessary.
-                using (StreamReader sr = new StreamReader("C:/Users/Public/Documents/CharacterData/CharacterData.txt"))
-                {
-                    //Declaring string and list of character class for purposes of reading in the file.
-                    string line;
-                    List<Character> listOfCharacters = new List<Character>();
-                                        
-                    //The following block reads in each line of the text file, and assigns the line as values of a character object.
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        string[] words = line.Split(' ');
-                        listOfCharacters.Add(new Character(words[0], words[1], Convert.ToInt32(words[2]), 
-                            Convert.ToInt32(words[3]), Convert.ToInt32(words[4]), Convert.ToDouble(words[5])));
-                    }//End While-Loop.
+            Console.SetWindowSize(100, 30);
+            List<Character> listOfCharacters = new List<Character>();
+            string line;
 
-                    //Initial display of data from text file.
-                    Console.WriteLine("\n----------------------\n\t  Name\t\t\tLevel    Battles    Victories    EXP Gained\n----------------------");
-                    foreach (Character thisCharacter in listOfCharacters)
+            //If the directory doesn't exist, creates it. Otherwise, it does nothing.
+            System.IO.Directory.CreateDirectory(@"C:/Users/Public/Documents/CharacterData");
+
+            //If the file doesn't exist in the path created, create the file, and add a sample line.
+            if(!File.Exists("C:/Users/Public/Documents/CharacterData/CharacterData.txt"))
+            {
+                Console.WriteLine("CharacterDataInput.txt not found in the proper directory. \nCreating a sample file so application can continue." +
+                    "\nRefer to menu options to modify data as necessary.");
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:/Users/Public/Documents/CharacterData/CharacterData.txt"))
+                {
+                    file.WriteLine("Sample Line 0 0 0 0");
+                }
+            }
+
+            //Read in and create instances of character data read in for each line.
+            using (StreamReader sr = new StreamReader("C:/Users/Public/Documents/CharacterData/CharacterData.txt"))
+            {
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] words = line.Split(' ');
+                    listOfCharacters.Add(new Character(words[0], words[1], Convert.ToInt32(words[2]),
+                        Convert.ToInt32(words[3]), Convert.ToInt32(words[4]), Convert.ToDouble(words[5])));
+                }//End While-Loop.
+            }
+
+            //Initial data display.
+            displayList(listOfCharacters);
+
+            while (true)
+            {
+                Console.WriteLine("\n\n-----------------------\n    0.) Exit Application\n    1.) Display All Stats\n    2.) Add EXP" +
+                    "\n    3.) Change Character Values\n    4.) Add Character\n    5.) Remove Character\n    " +
+                    "6.) Reset EXP, Battles, and Victories Gained This Battle" +
+                    "\n-----------------------\n\nDo what? (Enter Number)");
+                
+                if(Int32.TryParse(Console.ReadLine(), out int startingMenuResponse))
+                {
+                    switch (startingMenuResponse)
                     {
-                        thisCharacter.Display();
-                    }//End foreach-loop.
-                    Console.WriteLine("\n----------------------\nRefer to initial display above. Press any key to bring up the menu.");
-                    Console.ReadKey();
-                    
-                    while(true)
-                    {
-                        Console.WriteLine("\nDo what?\n------------------\n    0.) Exit\n    1.) Display All Stats\n    2.) Add EXP" +
-                            "\n    3.) Change Character Values\n    4.) Add or Remove Character\n    5.) Reset EXP, Battles, and Victories Gained This Battle" +
-                            "\nEnter Number: ");
-                        try
-                        {
-                            int MenuNumberChoice = Convert.ToInt32(Console.ReadLine());
-                            switch (MenuNumberChoice)
-                            {
-                                case 0:
-                                    Console.WriteLine("Exiting program...");
-                                    Environment.Exit(0);
-                                    break;
-                                case 1:
-                                    Console.WriteLine("\n----------------------\n\t  Name\t\t\tLevel    Battles    Victories    EXP Gained\n" +
-                                        "----------------------");
-                                    foreach (Character thisCharacter in listOfCharacters)
-                                    {
-                                        thisCharacter.Display();
-                                    }
-                                    Console.WriteLine("\n----------------------\nEnd of data display. Press any key to move on...");
-                                    Console.ReadKey();
-                                    break;
-                                case 2:
-                                    addExperience(listOfCharacters);
-                                    break;
-                                case 3:
-                                    changeValues(listOfCharacters);
-                                    break;
-                                case 4:
-                                    addOrRemoveCharacter(listOfCharacters);
-                                    break;
-                                case 5:
-                                    resetValues(listOfCharacters);
-                                    break;
-                                default:
-                                    Console.WriteLine("Invalid entry. Please enter a valid number option.\nPress any key to continue.");
-                                    Console.ReadKey();
-                                    break;
-                            }//End Switch Block.
-                        }//End Try.
-                        catch(Exception)
-                        {
+                        case 0:
+                            Console.WriteLine("Exiting program...");
+                            Environment.Exit(0);
+                            break;
+                        case 1:
+                            displayList(listOfCharacters);
+                            break;
+                        case 2:
+                            addExperience(listOfCharacters);
+                            break;
+                        case 3:
+                            changeValues(listOfCharacters);
+                            break;
+                        case 4:
+                            addCharacter(listOfCharacters);
+                            break;
+                        case 5:
+                            removeCharacter(listOfCharacters);
+                            break;
+                        case 6:
+                            resetValues(listOfCharacters);
+                            break;
+                        default:
                             Console.WriteLine("Invalid entry. Please enter a valid number option.\nPress any key to continue.");
                             Console.ReadKey();
-                        }//End menu try-catch block.
-                    }//End While-Loop.
-                }//End text file using block.
-            }//End Try.
-            catch(Exception)
+                            break;
+                    }//End Switch Block.
+                }
+                else
+                {
+                    Console.WriteLine("Invalid response. \nPlease enter the number corresponding to the action you wish to do." +
+                        "\nPress any key to continue.");
+                    Console.ReadKey();
+                }
+            }
+        
+            void displayList(List<Character> currentList)
             {
-                Console.WriteLine("CharacterData.txt file not found. Is the file in the character data folder in documents?" +
-                    "\nCannot currently continue without file. Exiting program.");
-                Environment.Exit(1);
-            }//End text file try-catch block.
+                Console.WriteLine("\n------------------------\n\t  Name\t\t\t Level    Battles    Victories    EXP Gained\n" +
+                "------------------------");
+                foreach (Character thisCharacter in listOfCharacters)
+                {
+                    thisCharacter.Display();
+                }
+                Console.WriteLine("------------------------\n\nEnd of data display. Press any key to go to menu.");
+                Console.ReadKey();
+            }
 
             void addExperience(List<Character> currentList)
             {
@@ -170,231 +177,264 @@ namespace ConsoleExperienceCalculator
                 
             }
 
-            void addOrRemoveCharacter(List<Character> currentList)
+            void addCharacter(List<Character> currentList)
             {
-                int addOrRemoveResponse = -1;
-
-                while (addOrRemoveResponse != 0)
+                string firstName = "";
+                string lastName = "";
+                int characterLevel = 1;
+                int battleCount = 0;
+                int victoryCount = 0;
+                double experienceAmount = 0.0;
+                
+                //get first name - type '-' to cancel
+                while(true)
                 {
-                    Console.WriteLine("\n    0.) Go Back\n    1.) Add New Character\n    2.) Remove a Character\nDo What? (Enter number)");
-                    if (Int32.TryParse(Console.ReadLine(), out addOrRemoveResponse))
+                    Console.WriteLine("\n\nAdding a new character." +
+                        "\n\nWhat is the first name of this new character?\n(Alternatively, type '-' to cancel.)");
+                    firstName = Console.ReadLine();
+
+                    if(firstName.Equals("-"))
                     {
-                        switch (addOrRemoveResponse)
+                        Console.WriteLine("Cancelling action. Press any key to go back to the menu.");
+                        Console.ReadKey();
+                        return;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
+                //get last name - type '-' for no last name
+                while(true)
+                {
+                    Console.WriteLine($"\n\nWhat is the last name of {firstName}?\n(Alternatively, type '-' if there is no last name.");
+
+                    lastName = Console.ReadLine();
+
+                    if (lastName.Equals("-"))
+                    {
+                        lastName = "NoLastName";
+                    }
+                    break;
+                }
+
+                //get level - can't be less than 1
+                while (true)
+                {
+                    Console.WriteLine($"\n\nWhat is the level of {firstName} {lastName}?\nPlease enter a whole number, 1 or greater.");
+                    if(Int32.TryParse(Console.ReadLine(), out characterLevel))
+                    {
+                        if(characterLevel < 1)
                         {
-                            case 0:
-                                break;
-                            case 1:
-                                Console.WriteLine("Creating a new character.\nWhat is this character's first name?(Type - to cancel)");
-                                string newFirstName = Console.ReadLine();
-                                if (newFirstName.Equals("-"))
-                                {
-                                    break;
-                                }
-
-                                Console.WriteLine($"What is the last name of {newFirstName}?\n(Type - if no last name");
-                                string newLastName = Console.ReadLine();
-                                if (newLastName.Equals("-"))
-                                {
-                                    newLastName = "NoLastName";
-                                }
-
-
-                                int newLevel = -1;
-                                while (newLevel <= 0)
-                                {
-                                    Console.WriteLine($"What is the level of {newFirstName} {newLastName}?\n   Enter a positive whole number:");
-                                    if (Int32.TryParse(Console.ReadLine(), out newLevel))
-                                    {
-                                        if (newLevel <= 0)
-                                        {
-                                            Console.WriteLine("Please enter a positive, whole number.");
-                                        }
-                                        else
-                                        {
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        newLevel = -1;
-                                        Console.WriteLine("Please enter a positive, whole number.");
-                                    }
-                                }
-
-                                
-                                int anyBattlesResponse = -1;
-                                int newBattleCount = 0;
-                                while (anyBattlesResponse != 1 || anyBattlesResponse != 2)
-                                {
-                                    Console.WriteLine($"Does {newFirstName} have any battles to start with?\n    1.) Yes\n    2.) No");
-                                    if(Int32.TryParse(Console.ReadLine(), out anyBattlesResponse))
-                                    {
-
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid response. Please enter the choice of the menu number.");
-                                    }
-
-                                    if (anyBattlesResponse == 1)
-                                    {
-                                        Console.WriteLine("How many battles? (enter a whole number greater than 0)");
-
-                                        if(Int32.TryParse(Console.ReadLine(), out newBattleCount))
-                                        {
-                                            if(newBattleCount < 0)
-                                            {
-                                                Console.WriteLine("Please only use positive numbers. Try again.");
-                                                anyBattlesResponse = 0;
-                                            }
-                                            else
-                                            {
-                                                break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Invalid response. Make sure it's a positive, whole number.");
-                                            anyBattlesResponse = 0;
-                                        }
-                                    }
-                                    else if(anyBattlesResponse == 2)
-                                    {
-                                        newBattleCount = 0;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid response. Please enter 1 for yes, or 2 for no.");
-                                    }
-                                }
-                                
-
-                                
-                                int anyVictoriesResponse = -1;
-                                int newVictoryCount = 0;
-                                while (anyVictoriesResponse != 1 || anyVictoriesResponse != 2)
-                                {
-                                    Console.WriteLine($"Does {newFirstName} have any victories to start with?\n    1.) Yes\n    2.) No");
-                                    if (Int32.TryParse(Console.ReadLine(), out anyVictoriesResponse))
-                                    {
-
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid response. Please enter the choice of the menu number.");
-                                    }
-
-                                    if (anyVictoriesResponse == 1)
-                                    {
-                                        Console.WriteLine("How many victories? (enter a whole, positive number)");
-                                        if (Int32.TryParse(Console.ReadLine(), out newVictoryCount))
-                                        {
-                                            if (newVictoryCount < 0)
-                                            {
-                                                Console.WriteLine("Please only use positive numbers. Try again.");
-                                                anyVictoriesResponse = 0;
-                                            }
-                                            else
-                                            {
-                                                if (newVictoryCount > newBattleCount)
-                                                {
-                                                    Console.WriteLine("You can't have more victories than battles.\nThe battle count you entered is {newBattleCount}." +
-                                                        "\nEnter a number less than that.");
-                                                    anyVictoriesResponse = 0;
-                                                }
-                                                else
-                                                {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Invalid response. Make sure it's a positive, whole number.");
-                                            anyVictoriesResponse = 0;
-                                        }
-                                    }
-                                    else if (anyVictoriesResponse == 2)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid response. Please enter 1 for yes, or 2 for no.");
-                                    }
-                                }
-
-
-                                
-                                int anyEXPResponse = -1;
-                                double newEXPAmount = 0;
-                                while (anyEXPResponse != 1 || anyEXPResponse != 2)
-                                {
-                                    Console.WriteLine($"Does {newFirstName} have any EXP to start with?\n    1.) Yes\n    2.) No");
-                                    if (Int32.TryParse(Console.ReadLine(), out anyEXPResponse))
-                                    {
-
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid response. Please enter the choice of the menu number.");
-                                    }
-                                    if (anyEXPResponse == 1)
-                                    {
-                                        Console.WriteLine("How much EXP? (Enter a number, decimal supported):");
-                                        if (Double.TryParse(Console.ReadLine(), out newEXPAmount))
-                                        {
-                                            if (newEXPAmount < 0)
-                                            {
-                                                Console.WriteLine("Please only use positive numbers. Try again.");
-                                                anyEXPResponse = 0;
-                                            }
-                                            else
-                                            {
-                                                
-                                                break;
-                                            }
-
-                                            
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine("Invalid response. Make sure it's a positive, whole number.");
-                                            anyEXPResponse = 0;
-                                        }
-
-                                    }
-                                    else if (anyEXPResponse == 2)
-                                    {
-                                        newEXPAmount = 0;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Invalid response. Please enter 1 for yes, or 2 for no.");
-                                    }
-                                }
-
-
-                                currentList.Add(new Character(newFirstName, newLastName, newLevel, newBattleCount, newVictoryCount, newEXPAmount));
-                                saveData(currentList);
-                                Console.WriteLine("Character has been added.\nPress any key to move on.");
-                                Console.ReadKey();
-                                break;
-                            case 2:
-                                break;
-                            default:
-                                Console.WriteLine($"{addOrRemoveResponse} is not a valid response. \nPlease enter a number corresponding to your desired action." +
-                            $"\nPress any key to move on.");
-                                Console.ReadKey();
-                                break;
+                            Console.WriteLine("Error: level of character cannot be less than 1.\nPlease enter a number that is 1 or greater." +
+                                "\nPress any key to continue.");
+                            Console.ReadKey();
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"{addOrRemoveResponse} is not a valid response. \nPlease enter a number corresponding to your desired action." +
-                            $"\nPress any key to move on.");
+                        Console.WriteLine("Error: Please enter a valid, whole number.\nPress any key to move on.");
+                        Console.ReadKey();
+                    }
+                }
+
+                //check if there's starting battles - can't be less than 0
+                while (true)
+                {
+                    Console.WriteLine($"Is there a starting number of battles for {firstName}?\nType 'y' if there is.");
+                    string checkForBattles = Console.ReadLine();
+
+                    if(checkForBattles.Equals("y") || checkForBattles.Equals("Y"))
+                    {
+                        Console.WriteLine("How many battles?\nPlease enter a whole number, that is at least 0.");
+                        if(Int32.TryParse(Console.ReadLine(), out battleCount))
+                        {
+                            if(battleCount < 0)
+                            {
+                                Console.WriteLine("Error: battle count of character cannot be less than 0.\nPlease enter a number that is 0 or greater." +
+                                "\nPress any key to continue.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: Please enter a valid, whole number.\nPress any key to move on.");
+                            Console.ReadKey();
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                //check if there's starting victories - can't be less than 0; can't be more than the number of battles
+                while (true)
+                {
+                    if(battleCount < 1)
+                    {
+                        Console.WriteLine("\n\nBattle count is at 0, assuming no victories.\n");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n\nAre there any starting victories for {firstName}?\nType 'y' if there are.");
+                        string checkForVictories = Console.ReadLine();
+
+                        if(checkForVictories.Equals("y") || checkForVictories.Equals("Y"))
+                        {
+                            Console.WriteLine($"\nHow many victories?\nEnter a number that is in the range of 0 up to {battleCount}." +
+                                $"\n(Note: {battleCount} is the number of battles you previously entered.)");
+
+                            if(Int32.TryParse(Console.ReadLine(), out victoryCount))
+                            {
+                                if(victoryCount < 0)
+                                {
+                                    Console.WriteLine("Error: victory count of character cannot be less than 0.\nPlease enter a number that is 0 or greater." +
+                                        "\nPress any key to continue.");
+                                    Console.ReadKey();
+                                }
+                                else if(victoryCount > battleCount)
+                                {
+                                    Console.WriteLine("Error: Victory count of character cannot be greater than their number of battles." +
+                                        $"\nPlease enter a number in the range of 0 up to {battleCount}." +
+                                        $"\nPress any key to continue.");
+
+                                    Console.ReadKey();
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error: Please enter a valid, whole number.\nPress any key to move on.");
+                                Console.ReadKey();
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                //check if there's starting EXP
+                while (true)
+                {
+                    Console.WriteLine($"Is there a starting number of EXP for {firstName}?\nType 'y' if there is.");
+                    string checkForExp = Console.ReadLine();
+
+                    if(checkForExp.Equals("y") || checkForExp.Equals("Y"))
+                    {
+                        Console.WriteLine("How much EXP? Please enter a number.\n(Note: Decimal numbers are supported.");
+                        if(Double.TryParse(Console.ReadLine(), out experienceAmount))
+                        {
+                            if(experienceAmount < 0)
+                            {
+                                Console.WriteLine("Error: EXP amount cannot be less than 0. Enter an amount greater than 0." +
+                                    "\nPress any key to continue.");
+                                Console.ReadKey();
+                            }
+                            else
+                            {
+                                experienceAmount = Math.Round(experienceAmount, 2);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error: Invalid entry. Please enter a number.\nPress any key to continue.");
+                            Console.ReadLine();
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                //Adding new character to list.
+                currentList.Add(new Character(firstName, lastName, characterLevel, battleCount, victoryCount, experienceAmount));
+
+                //Saving new input/output files with new data.
+                saveData(currentList);
+
+                //Exiting function
+                Console.WriteLine("Character has been added to the data.\nPress any key to display new data, and go back to menu.");
+                displayList(currentList);
+                Console.ReadKey();
+            }
+
+            void removeCharacter(List<Character> currentList)
+            {
+                while(true)
+                {
+                    Console.WriteLine("\n\n----------------------");
+                    int count = 1;
+
+                    Console.WriteLine("    0.) Go Back");
+                    foreach (Character person in currentList)
+                    {
+                        Console.WriteLine("    " + count + ".) " + person.getFullName());
+                        count++;
+                    }
+
+                    Console.WriteLine("----------------------\n\nRemove who? (Enter number)");
+
+                    if(Int32.TryParse(Console.ReadLine(), out int removeWhoResponse))
+                    {
+                        if(removeWhoResponse == 0)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                Console.WriteLine($"We're going to remove \n     " + currentList[removeWhoResponse - 1].getFullName() + "\nAre you sure?" +
+                                "\nEnter, in all caps, 'YES' (with all caps, too) if you are sure.");
+
+                                string confirmRemoval = Console.ReadLine();
+
+                                if (confirmRemoval.Equals("YES"))
+                                {
+                                    currentList.RemoveAt(removeWhoResponse - 1);
+                                    saveData(currentList);
+                                    Console.WriteLine("Removed the character. Press any key to go back to the menu.");
+                                    Console.ReadKey();
+                                    return;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Cancelling action. Press any key to move on.");
+                                    Console.ReadKey();
+                                }
+                            }
+                            catch (ArgumentOutOfRangeException e)
+                            {
+                                Console.WriteLine(e.Message);
+                                Console.WriteLine("\nSee above error. Please enter a number that corresponds to the options you have." +
+                                    "\nPress any key to move on.");
+                                Console.ReadKey();
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Invalid entry. Please enter a number corresponding to the menu selection." +
+                            "\nPress any key to move on.");
                         Console.ReadKey();
                     }
                 }
@@ -402,7 +442,29 @@ namespace ConsoleExperienceCalculator
             
             void resetValues(List<Character> currentList)
             {
+                Console.WriteLine("\n\nThis will set the battle count, victory count, and EXP earned back to 0,\n" +
+                    "for the purposes of clearing for the next battle.\nThis applies to EVERY character that exists on the current character list.\n" +
+                    "Are you absolutely sure that you are ready to reset these values?\n\nType 'YES' (in all caps) if you are sure.");
 
+                string confirmReset = Console.ReadLine();
+
+                if(confirmReset.Equals("YES"))
+                {
+                    foreach(Character person in currentList)
+                    {
+                        person.resetValues();
+                    }
+
+                    saveData(currentList);
+
+                    Console.WriteLine("\n\nAll characters' battle stats have been reset.\nPress any key to go back to the menu.");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine("Cancelling action. Press any key to go back to the menu.");
+                    Console.ReadKey();
+                }
             }
             
             void saveData(List<Character> currentList)
